@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./lib/clearbit.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./lib/index.js");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -90,55 +90,67 @@
 /*!*************************!*\
   !*** ./lib/clearbit.js ***!
   \*************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! exports provided: stalkSomeone */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-const authorization = "Bearer sk_f9deb0090ac7688f94eb11ce09fd6a6e";
-
-// Pseudocode
-
-// 1. Select submit button, form area, results area, userName, userEmail, userBio, userLocation
-const submit = document.querySelector("#clearbitSubmit");
-const userText = document.querySelector("#clearbitEmail");
-const name = document.querySelector("#userName");
-const email = document.querySelector("#userEmail");
-const bio = document.querySelector("#userBio");
-const location = document.querySelector("#userLocation");
-
-const displayData = (person) => {
-  name.innerText = person.name.fullName;
-  email.innerText = person.email;
-  bio.innerText = person.bio;
-  location.innerText = person.location;
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "stalkSomeone", function() { return stalkSomeone; });
+const displayPersonInfo = (person) => {
+  const userName = document.querySelector("#userName");
+  const userEmail = document.querySelector("#userEmail");
+  const userBio = document.querySelector("#userBio");
+  const userLocation = document.querySelector("#userLocation");
+  userName.innerText = person.name.fullName;
+  userEmail.innerText = person.email;
+  userBio.innerText = person.bio;
+  userLocation.innerText = person.location;
 };
 
-const fetchUserData = (email) => {
-  const url = `https://person-stream.clearbit.com/v2/combined/find?email=${email}`;
-  fetch(url, {
-    headers: {'Authorization': authorization}
+const fetchClearBit = (email) => {
+  const authorization = "Bearer sk_f9deb0090ac7688f94eb11ce09fd6a6e";
+  const url = `https://person.clearbit.com/v2/combined/find?email=${email}`;
+  fetch(url, { headers: { Authorization: authorization } })
+  .then(response => response.json())
+  .then((data) => {
+    console.log(data);
+    // => is a fat-arrow in JS
+    // => is a hash-rocket in ruby
+    // 3.Change the DOM(fill the name, email)
+    displayPersonInfo(data.person);
   })
-    .then(response => response.json())
-    .then((data)=> {
-      console.log(data);
-      const person = data.person;
-      displayData(person);
-    });
 };
 
 const stalkSomeone = (event) => {
-  // preventdefault()?
+  const inputBox = document.querySelector("#clearbitEmail");
+  // something not to forget!!
   event.preventDefault();
-  // 2.5 fetch(url)
-  fetchUserData(userText.value);
-};
+  console.log(event);
+  // 2.5 Fetch from API
+  fetchClearBit(inputBox.value);
+}
 
-// take out the contents 
-// 2. submit event listener to the submit button
-submit.addEventListener("click", stalkSomeone);
 
-// 3. change the DOM 
-// send the datas to results(tds)
 
+/***/ }),
+
+/***/ "./lib/index.js":
+/*!**********************!*\
+  !*** ./lib/index.js ***!
+  \**********************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _clearbit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./clearbit */ "./lib/clearbit.js");
+
+
+//1. select button(#clearbitSubmit)  and the input (#clearbitEmail) and select fields we need to populate
+const submitButton = document.querySelector("#clearbitSubmit");
+
+//2. listen the event(click on submits)
+submitButton.addEventListener("click", _clearbit__WEBPACK_IMPORTED_MODULE_0__["stalkSomeone"]);
 
 /***/ })
 
